@@ -1,9 +1,9 @@
-def make_2d_list(height, width, val):
+def make_2d_list(height, width):
     output = []
     for i in range(height):
         curr = []
         for j in range(width):
-            curr.append(val)
+            curr.append(0)
         output.append(curr)
     return output
 
@@ -24,10 +24,10 @@ def count_visible_trees(tree_list):
         visible.append(mark_row)
 
     # Initialize four l-by-w 0 arrays
-    top = make_2d_list(h, w, 0)
-    bot = make_2d_list(h, w, 0)
-    left = make_2d_list(h, w, 0)
-    right = make_2d_list(h, w, 0)
+    top = make_2d_list(h, w)
+    bot = make_2d_list(h, w)
+    left = make_2d_list(h, w)
+    right = make_2d_list(h, w)
 
     # Loop through to count trees that are visible from each direction (outside)
     for i in range(1,h-1):
@@ -52,20 +52,47 @@ def count_visible_trees(tree_list):
             count += item
     return count
 
+def insert_tree(x, tree_row):
+    return [x]+list(filter(lambda y: y>x, tree_row))
+
 def compute_scenic_score(tree_list):
     # Initialize tables marking visible trees
     h = len(tree_list)
     w = len(tree_list[0])
-    up = make_2d_list(h, w, [])
-    down = make_2d_list(h, w, [])
-    left = make_2d_list(h, w, [])
-    right = make_2d_list(h, w, [])
 
     # Loop through to count trees that are visible from each direction (inside)
-    for i in range(1, h-1):
-        for j in range(1, w-1):
-            pass
+    max_scenic_score = 0
+    for i in range(h):
+        for j in range(w):
+            x = i
+            while x > 0:
+                x -= 1
+                if tree_list[x][j] >= tree_list[i][j]:
+                    break
+            up = i-x
+            x = i
+            while x<h-1:
+                x += 1
+                if tree_list[x][j] >= tree_list[i][j]:
+                    break
+            down = x-i
+            x = j
+            while x>0:
+                x -= 1
+                if tree_list[i][x] >= tree_list[i][j]:
+                    break
+            left = j-x
+            x = j
+            while x<w-1:
+                x += 1
+                if tree_list[i][x] >= tree_list[i][j]:
+                    break
+            right = x-j
+            print('up: '+str(up)+'; down: '+str(down)+'; left: '+str(left)+'; right: '+str(right))
+            max_scenic_score = max(max_scenic_score, up*down*left*right)
+    return max_scenic_score
 
+testcase = [[3,0,3,7,3], [2,5,5,1,2], [6,5,3,3,2], [3,3,5,4,9], [3,5,3,9,0]]
 
 def main():
     trees = []
@@ -77,7 +104,7 @@ def main():
                 row.append(int(char))
             trees.append(row)
 
-    print(count_visible_trees(trees))
+    print(compute_scenic_score(trees))
 
     
                 
