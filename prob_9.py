@@ -46,7 +46,7 @@ def update_rope(coords):
     return coords
 
 def main():
-    rope_length = 10
+    rope_length = 2
     v_max, v_min, h_max, h_min = size_board()
     board = make_2d_list(v_max-v_min, h_max-h_min)
     Rope = []
@@ -60,22 +60,22 @@ def main():
             if direction == 'U':
                 for i in range(int(dist)):
                     Rope[0][0] -= 1
-                    update_rope(Rope)
+                    Rope = update_rope(Rope)
                     board[Rope[-1][0]][Rope[-1][1]] = 1
             elif direction == 'D':
                 for i in range(int(dist)):
                     Rope[0][0] += 1
-                    update_rope(Rope)
+                    Rope = update_rope(Rope)
                     board[Rope[-1][0]][Rope[-1][1]] = 1
             elif direction == 'L':
                 for i in range(int(dist)):
                     Rope[0][1] -= 1
-                    update_rope(Rope)
+                    Rope = update_rope(Rope)
                     board[Rope[-1][0]][Rope[-1][1]] = 1
             elif direction == 'R':
                 for i in range(int(dist)):
                     Rope[0][1] += 1
-                    update_rope(Rope)
+                    Rope = update_rope(Rope)
                     board[Rope[-1][0]][Rope[-1][1]] = 1
     # Count marked points
     marked = 0

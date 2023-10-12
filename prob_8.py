@@ -88,7 +88,6 @@ def compute_scenic_score(tree_list):
                 if tree_list[i][x] >= tree_list[i][j]:
                     break
             right = x-j
-            print('up: '+str(up)+'; down: '+str(down)+'; left: '+str(left)+'; right: '+str(right))
             max_scenic_score = max(max_scenic_score, up*down*left*right)
     return max_scenic_score
 
