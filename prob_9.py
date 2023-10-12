@@ -27,12 +27,31 @@ def size_board():
                 h_curr += int(dist)
                 h_max = max(h_max, h_curr)
         return (v_max, v_min, h_max, h_min)
+    
+def update_rope(coords):
+    n = len(coords)
+    for i in range(1,n):
+        if coords[i][0] == coords[i-1][0] - 2:
+            coords[i][0] += 1
+            coords[i][1] = coords[i-1][1]
+        elif coords[i][0] == coords[i-1][0] + 2:
+            coords[i][0] -= 1
+            coords[i][1] = coords[i-1][1]
+        elif coords[i][1] == coords[i-1][1] - 2:
+            coords[i][1] += 1
+            coords[i][0] = coords[i-1][0]
+        elif coords[i][1] == coords[i-1][1] + 2:
+            coords[i][1] -= 1
+            coords[i][0] = coords[i-1][0]
+    return coords
 
 def main():
+    rope_length = 10
     v_max, v_min, h_max, h_min = size_board()
     board = make_2d_list(v_max-v_min, h_max-h_min)
-    H = [v_max, (-h_min)]
-    T = [v_max, (-h_min)]
+    Rope = []
+    for i in range(rope_length):
+        Rope.append([v_max, (-h_min)])
     board[v_max][h_min] = 1
     with open('rope_path.txt') as document:
         # Let the path play out
@@ -40,32 +59,24 @@ def main():
             direction, dist = line.strip('\n').split(' ')
             if direction == 'U':
                 for i in range(int(dist)):
-                    H[0] -= 1
-                    if abs(H[0]-T[0]) == 2:
-                        T[0] = T[0] - 1 # vertical pull
-                        T[1] = H[1] # diagonal pull
-                        board[T[0]][T[1]] = 1
+                    Rope[0][0] -= 1
+                    update_rope(Rope)
+                    board[Rope[-1][0]][Rope[-1][1]] = 1
             elif direction == 'D':
                 for i in range(int(dist)):
-                    H[0] += 1
-                    if abs(H[0]-T[0]) == 2:
-                        T[0] += 1 # vertical pull
-                        T[1] = H[1] # diagonal pull
-                        board[T[0]][T[1]] = 1
+                    Rope[0][0] += 1
+                    update_rope(Rope)
+                    board[Rope[-1][0]][Rope[-1][1]] = 1
             elif direction == 'L':
                 for i in range(int(dist)):
-                    H[1] -= 1
-                    if abs(H[1]-T[1]) == 2:
-                        T[1] -= 1 # horizontal pull
-                        T[0] = H[0] # diagonal pull
-                        board[T[0]][T[1]] = 1
+                    Rope[0][1] -= 1
+                    update_rope(Rope)
+                    board[Rope[-1][0]][Rope[-1][1]] = 1
             elif direction == 'R':
                 for i in range(int(dist)):
-                    H[1] += 1
-                    if abs(H[1]-T[1]) == 2:
-                        T[1] += 1 # horizontal pull
-                        T[0] = H[0] # diagonal pull
-                        board[T[0]][T[1]] = 1
+                    Rope[0][1] += 1
+                    update_rope(Rope)
+                    board[Rope[-1][0]][Rope[-1][1]] = 1
     # Count marked points
     marked = 0
     for i in range(v_max - v_min):
