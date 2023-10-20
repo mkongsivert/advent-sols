@@ -46,13 +46,14 @@ def update_rope(coords):
     return coords
 
 def main():
-    rope_length = 2
+    rope_length = 10
     v_max, v_min, h_max, h_min = size_board()
-    board = make_2d_list(v_max-v_min, h_max-h_min)
+    board = make_2d_list(v_max-v_min+1, h_max-h_min+1)
     Rope = []
     for i in range(rope_length):
-        Rope.append([v_max, (-h_min)])
-    board[v_max][h_min] = 1
+        Rope.append([v_max+1, (-h_min)])
+    print(Rope)
+    board[v_max+1][-h_min] = 1
     with open('rope_path.txt') as document:
         # Let the path play out
         for line in document:
@@ -79,8 +80,8 @@ def main():
                     board[Rope[-1][0]][Rope[-1][1]] = 1
     # Count marked points
     marked = 0
-    for i in range(v_max - v_min):
-        for j in range(h_max - h_min):
+    for i in range(v_max - v_min+1):
+        for j in range(h_max - h_min+1):
             marked += board[i][j]
     print(marked)
 
