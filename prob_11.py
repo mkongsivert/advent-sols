@@ -22,14 +22,15 @@ class Monkey:
     def turn(self):
         item = self.items.pop(0)
         item = self.operation(item) # Inspection
-        item = item // 3 # Getting bored
+        #item = item // 3 # Getting bored
         self.business += 1
         return (item, self.t) if item % self.test == 0 else (item, self.f)
         
 def main():
     monkeys = []
-    monk_start_items, monk_oper, monk_test, monk_t, monk_f = '','',''
-    with open('monkeys.txt') as document:
+    monk_start_items, monk_oper, monk_test, monk_t, monk_f = '','','','',''
+    # Read in monkeys
+    with open('monkeytest.txt') as document:
         while True:
             line = document.readline()
             if not line:
@@ -47,12 +48,16 @@ def main():
             if not line:
                 break
 
-    for i in range(20):
+    # Run rounds
+    for i in range(10000):
         for monk in monkeys:
             while monk.items != []:
-                to, moved_item = monk.turn()
-                print('Item with worry level '+str(moved_item)+' thrown to monkey '+str(to))
-                monkeys[to].append(moved_item)
+                moved_item, to = monk.turn()
+                monkeys[to].items.append(moved_item)
+
+    # Calculate monkey business
+    for i in range(len(monkeys)):
+        print('Monkey '+str(i)+' inspected items '+str(monkeys[i].business)+' times.')
 
 
 if __name__ == "__main__":
